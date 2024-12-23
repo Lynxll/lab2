@@ -25,6 +25,8 @@ protected:
     size_t sz;
     T* pMem;
 public:
+
+    //Конструктор по умолчанию
     TDynamicVector(size_t size = 1) : sz(size) {
         if (sz == 0)
             throw out_of_range("Vector size should be greater than zero");
@@ -33,17 +35,20 @@ public:
         pMem = new T[sz](); // Инициализация значениями по умолчанию
     }
 
+    //Конструктор с существующим массивом
     TDynamicVector(T* arr, size_t s) : sz(s) {
         assert(arr != nullptr && "TDynamicVector ctor requires non-nullptr arg");
         pMem = new T[sz];
         std::copy(arr, arr + sz, pMem);
     }
 
+    //Конструктор копирования
     TDynamicVector(const TDynamicVector& v) : sz(v.sz) {
         pMem = new T[sz];
         std::copy(v.pMem, v.pMem + sz, pMem);
     }
 
+    //Конструктор перемещения
     TDynamicVector(TDynamicVector&& v) noexcept : sz(v.sz), pMem(v.pMem) {
         v.sz = 0;
         v.pMem = nullptr;
@@ -53,6 +58,7 @@ public:
         delete[] pMem;
     }
 
+    //Оператор копирующего присваивания
     TDynamicVector& operator=(const TDynamicVector& v) {
         if (this == &v) return *this; // Защита от самоприсваивания
         T* tmp = new T[v.sz];
@@ -63,6 +69,7 @@ public:
         return *this;
     }
 
+    //Оператор перемещающего присваивания
     TDynamicVector& operator=(TDynamicVector&& v) noexcept {
         if (this == &v) return *this; // Защита от самоприсваивания
         delete[] pMem; // Освобождаем старую память
@@ -77,14 +84,10 @@ public:
 
     // Индексация
     T& operator[](size_t ind) {
-        if (ind >= sz)
-            throw out_of_range("Index out of range");
         return pMem[ind];
     }
 
     const T& operator[](size_t ind) const {
-        if (ind >= sz)
-            throw out_of_range("Index out of range");
         return pMem[ind];
     }
 
